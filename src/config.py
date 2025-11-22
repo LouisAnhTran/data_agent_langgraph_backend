@@ -33,8 +33,7 @@ class Settings(BaseSettings):
     # Data Processing Settings
     max_data_rows: int = 10000
     default_llm_temperature: float = 0.7
-    default_llm_model: str = "claude-3-5-sonnet-20241022"
-
+    default_llm_model: str = "gpt-4o"
 
 # Create a global settings instance
 settings = Settings()
