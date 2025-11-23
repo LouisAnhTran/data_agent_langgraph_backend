@@ -61,7 +61,9 @@ def construct_queue_mapping(state: QueueOverallState) -> dict:
     Returns:
         Dictionary containing mapping of queue names to IDs
     """
-    print("💡 I am making graph QL call to fetch queue names and ids")
+    print("\n 💡 I am in construct_queue_mapping node")
+
+    print(" I am making graph QL call to fetch queue names and ids")
 
     url = "https://dash-dev.staple.io/graphql"
 
@@ -82,7 +84,8 @@ def construct_queue_mapping(state: QueueOverallState) -> dict:
     }
 
     # Full cookie string from Postman
-    cookie_string = "__cfduid=1763862616.948.43.883255|92177388de9c0d9ffff64d7c4b776c11; __stripe_mid=b7c69d34-29c8-4cf2-b50e-79da18b1c18af4d1d9; __t__SGDEV=Bearer%20eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImlkZW50aXR5IjoiMSIsImlhdCI6MTc2Mzg3MDA4NiwiZXhwIjoxNzYzOTEzMjg2fQ.Omx2Sb8BCuKpjgDCAaaX6TnUsl_TTlHluVV5aQMf23Y; crisp-client%2Fsession%2Fb5af01cf-848b-4812-b6b6-c1ee3aa52ffa=session_b14a3c2d-e168-4b50-b6d0-a4a11fd9944c"
+    cookie_string = "__cfduid=1763862616.948.43.883255|92177388de9c0d9ffff64d7c4b776c11; __stripe_mid=b7c69d34-29c8-4cf2-b50e-79da18b1c18af4d1d9; crisp-client%2Fsession%2Fb5af01cf-848b-4812-b6b6-c1ee3aa52ffa=session_25d399fc-8e6f-442c-ae36-28653177ec93; __t__SGDEV=Bearer%20eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImlkZW50aXR5IjoiMSIsImlhdCI6MTc2Mzg4ODg3NiwiZXhwIjoxNzYzOTMyMDc2fQ.Itvj4rIJHCFfAuGxmLYrS1DVxBzLXgptD1vkeYWMByA"
+
 
     headers["Cookie"] = cookie_string
 
@@ -194,7 +197,7 @@ def update_search_payload(state: QueueOverallState) -> dict:
     Returns:
         Dictionary containing updated search payload and attributes
     """
-    print("🚀 I am in update_search_payload node")
+    print("\n 🚀 I am in update_search_payload node")
 
     map_extracted_queue_to_ids = state['map_extracted_queue_to_ids']
     search_attributes = state['search_attributes']
@@ -220,13 +223,18 @@ def routing_queue_processing(state: QueueOverallState) -> str:
     Returns:
         Route name indicating next node to execute
     """
-    print("🚀 I am in routing_queue_processing node")
+    print("\n 🚀 I am in routing_queue_processing node")
 
     map_extracted_queue_to_ids = state['map_extracted_queue_to_ids']
+    
+    print("map_extracted_queue_to_ids: ",map_extracted_queue_to_ids)
 
     if not map_extracted_queue_to_ids or not all(list(map_extracted_queue_to_ids.values())):
+        print("no queues extracted - request user to refine query")
         return "no queues extracted - user to refine query"
-
+    
+    print("correct queues extracted - go to update search payload")
+    
     return "correct queues extracted - update search payload"
 
 
