@@ -12,6 +12,7 @@ class FieldsPayload(TypedDict):
     
 class DocFieldsPayload(TypedDict):
     doctype: str
+    model_id: str
     fields: List[FieldsPayload]
     
 class SearchPayload(TypedDict):

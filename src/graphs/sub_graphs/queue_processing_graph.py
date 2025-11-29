@@ -84,7 +84,8 @@ def construct_queue_mapping(state: QueueOverallState) -> dict:
     }
 
     # Full cookie string from Postman
-    cookie_string = "__cfduid=1763862616.948.43.883255|92177388de9c0d9ffff64d7c4b776c11; __stripe_mid=b7c69d34-29c8-4cf2-b50e-79da18b1c18af4d1d9; crisp-client%2Fsession%2Fb5af01cf-848b-4812-b6b6-c1ee3aa52ffa=session_25d399fc-8e6f-442c-ae36-28653177ec93; __t__SGDEV=Bearer%20eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImlkZW50aXR5IjoiMSIsImlhdCI6MTc2Mzg4ODg3NiwiZXhwIjoxNzYzOTMyMDc2fQ.Itvj4rIJHCFfAuGxmLYrS1DVxBzLXgptD1vkeYWMByA"
+    # Full cookie string from Postman
+    cookie_string = "__cfduid=1764392981.029.39.512010|92177388de9c0d9ffff64d7c4b776c11; __stripe_mid=b7c69d34-29c8-4cf2-b50e-79da18b1c18af4d1d9; crisp-client%2Fsession%2Fb5af01cf-848b-4812-b6b6-c1ee3aa52ffa=session_9a78767f-2f49-47f8-92d5-9b1dc5f3663f; __t__SGDEV=Bearer%20eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImlkZW50aXR5IjoiMSIsImlhdCI6MTc2NDM5MzA2NywiZXhwIjoxNzY0NDM2MjY3fQ.9NE-kBb7lCDfwAB3TAXvFcX1r0o6hxjOmbFetWdc4dA"
 
 
     headers["Cookie"] = cookie_string
@@ -223,7 +224,7 @@ def routing_queue_processing(state: QueueOverallState) -> str:
     Returns:
         Route name indicating next node to execute
     """
-    print("\n 🚀 I am in routing_queue_processing node")
+    print("\n 🚀 I am in routing_queue_processing conditional edge")
 
     map_extracted_queue_to_ids = state['map_extracted_queue_to_ids']
     
