@@ -85,7 +85,7 @@ def construct_queue_mapping(state: QueueOverallState) -> dict:
 
     # Full cookie string from Postman
     # Full cookie string from Postman
-    cookie_string = "__cfduid=1764392981.029.39.512010|92177388de9c0d9ffff64d7c4b776c11; __stripe_mid=b7c69d34-29c8-4cf2-b50e-79da18b1c18af4d1d9; crisp-client%2Fsession%2Fb5af01cf-848b-4812-b6b6-c1ee3aa52ffa=session_9a78767f-2f49-47f8-92d5-9b1dc5f3663f; __t__SGDEV=Bearer%20eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImlkZW50aXR5IjoiMSIsImlhdCI6MTc2NDM5MzA2NywiZXhwIjoxNzY0NDM2MjY3fQ.9NE-kBb7lCDfwAB3TAXvFcX1r0o6hxjOmbFetWdc4dA"
+    cookie_string = "__cfduid=1765196161.753.41.415118|92177388de9c0d9ffff64d7c4b776c11; __stripe_mid=b7c69d34-29c8-4cf2-b50e-79da18b1c18af4d1d9; crisp-client%2Fsession%2Fb5af01cf-848b-4812-b6b6-c1ee3aa52ffa=session_da6382f8-5d60-41cc-8393-b137c401fc7f; __t__SGDEV=Bearer%20eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImlkZW50aXR5IjoiMSIsImlhdCI6MTc2NTE5MTEwNiwiZXhwIjoxNzY1MjM0MzA2fQ.N8xyl8dqYbDF28OwttiQNNqgN5G1hBrVCwLC7h0fadU"
 
 
     headers["Cookie"] = cookie_string

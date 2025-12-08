@@ -11,8 +11,8 @@ class FieldsPayload(TypedDict):
     value: str
     
 class DocFieldsPayload(TypedDict):
-    doctype: str
-    model_id: str
+    doctype: Optional[str]=None
+    model_id: Optional[str]=None
     fields: List[FieldsPayload]
     
 class SearchPayload(TypedDict):
