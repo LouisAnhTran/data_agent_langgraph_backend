@@ -53,6 +53,13 @@ class Settings(BaseSettings):
     default_llm_temperature: float = 0.7
     default_llm_model: str = "gpt-4o"
 
+    # Logging Settings
+    log_level: str = "INFO"
+    log_to_file: bool = True
+    log_dir: str = "logs"
+    
+    cookie_string: str
+
 
 # Create a global settings instance
 settings = Settings()

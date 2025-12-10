@@ -16,6 +16,8 @@ INSTRUCTIONS:
 7. If no models are found or matched, return an empty list
 8. Do NOT extract queue names, dates, or other attributes - ONLY model names
 9. Common patterns to look for: "in [model name]", "from [model name]", "[model name] model", "[model name] documents"
+10. Reasoning in mark down format
+
 
 MATCHING RULES:
 - Exact match preferred (e.g., "Invoice" matches "Invoice")

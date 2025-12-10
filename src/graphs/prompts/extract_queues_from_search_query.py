@@ -16,6 +16,8 @@ INSTRUCTIONS:
 7. If no queues are found or matched, return an empty list
 8. Do NOT extract document types, dates, or other attributes - ONLY queue names
 9. Common patterns to look for: "in [queue name]", "from [queue name]", "[queue name] queue"
+10. Reasoning in mark down format
+
 
 MATCHING RULES:
 - Exact match preferred (e.g., "invoice" matches "invoice")

@@ -8,6 +8,7 @@ ALLOWED SEARCH ATTRIBUTES (you can ONLY return these):
 1. "document_model" - when user wants to search by document type, document model, or document category (e.g., invoice, receipt, contract)
 2. "queue" - when user wants to search by queue name (e.g., invoice queue, HR queue, claims queue, louis_test queue)
 3. "date" - when user wants to search by date, date range, or time period (e.g., yesterday, last week, last month, January 15th)
+4. Reasoning in mark down format
 
 IMPORTANT RULES:
 - You MUST only return attributes from the allowed list: ["document_type", "queue", "date"]

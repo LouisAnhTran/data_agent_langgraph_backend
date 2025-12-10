@@ -15,6 +15,7 @@ INSTRUCTIONS:
 6. If no field-value pairs are found, return an empty list
 7. Do NOT invent values - only extract explicitly mentioned values
 8. Handle various formats: dates, numbers, text, currency amounts
+9. Reasoning in mark down format
 
 MATCHING RULES:
 - Exact match preferred (e.g., "Invoice Number" matches "Invoice Number")
