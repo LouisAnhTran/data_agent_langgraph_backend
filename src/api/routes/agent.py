@@ -2,7 +2,7 @@
 
 import json
 import uuid
-from typing import Optional, AsyncGenerator
+from typing import Dict, Optional, AsyncGenerator
 from fastapi import APIRouter
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
@@ -39,6 +39,7 @@ class ChatRequest(BaseModel):
     user_query: str
     thread_id: Optional[str] = None
     next_node: Optional[str] = None
+    map_extracted_queue_to_ids: Optional[Dict]=None
 
 
 async def stream_graph_updates(
@@ -58,6 +59,9 @@ async def stream_graph_updates(
         thread = {"configurable": {"thread_id": thread_id}}
 
         logger.info(f"Starting graph stream for thread: {thread_id}")
+
+        # Track streamed messages to avoid duplicates
+        streamed_message_count = 0
 
         # Stream graph execution
         for chunk in graph.stream(
@@ -82,23 +86,86 @@ async def stream_graph_updates(
                 # Format as SSE
                 yield f"data: {json.dumps(response_data)}\n\n"
 
+                # Track how many messages we've streamed
+                streamed_message_count = len(chunk["messages"])
+                
+        logger.info(f"streamed_message_count: {streamed_message_count}")
+
         # current graph state
         state = graph.get_state(thread)
+        
+        subgraph_state=None
+
+        # Check for messages in interrupted subgraph state
+        if state.next and state.tasks:
+            logger.info(f"Graph interrupted at: {state.next[0]}")
+            logger.info(f"Checking subgraph state for unstreamed messages...")
+
+            # Get subgraph configuration
+            subgraph_config = state.tasks[0].state
+            
+            logger.info(f"subgraph_config: {subgraph_config}")
+            
+            # Get the actual subgraph state using the config
+            subgraph_state = graph.get_state(subgraph_config)
+            
+            if subgraph_state:
+                # values is a method, not a property - need to call it
+                subgraph_values = subgraph_state.values if isinstance(subgraph_state.values, dict) else subgraph_state.values()
+
+                if subgraph_values and subgraph_values.get("messages"):
+                    subgraph_messages = subgraph_values["messages"]
+                    main_graph_message_count = len(state.values.get("messages", []))
+
+                    logger.info(f"Subgraph has {len(subgraph_messages)} messages, main graph has {main_graph_message_count}")
+
+                    # Subgraph messages include all messages from main graph + new ones
+                    # Extract only the new messages added by subgraph
+                    if len(subgraph_messages) > streamed_message_count:
+                        logger.info(f"Found {len(subgraph_messages) - streamed_message_count} messages in interrupted subgraph")
+
+                        # Stream messages that are only in subgraph
+                        for message in subgraph_messages[main_graph_message_count:]:
+                            response_data = {
+                                "type": "message",
+                                "content": message.content,
+                                "message_type": message.__class__.__name__,
+                                "thread_id": thread_id,
+                            }
+                            yield f"data: {json.dumps(response_data)}\n\n"
+                            logger.info(f"Streamed subgraph message: {message.content[:100]}...")
 
         response_type = None
         action = None
         next_node = None
+        map_queues_to_ids=None
 
         # require human in the loop
         if state.next:
-            next_node = state.next[0]
+            if not subgraph_state:
+                next_node = state.next[0]
 
-            logger.info(f"🍿 next node for humna in the loop {next_node}")
+                logger.info(f"🍿 next node for humna in the loop {next_node}")
 
-            response_type = "human_required"
+                response_type = "human_required"
 
-            if next_node == "user_input_clarity":
-                action = "user_freetext_input"
+                if next_node == "user_input_clarity":
+                    action = "user_freetext_input"
+            else:
+                next_node = subgraph_state.next[0]
+
+                logger.info(f"🍿 next node for humna in the loop {next_node}")
+                
+                response_type = "human_required"
+                
+                if next_node=="user_refine_search_query":
+                    action = "list_down_queue"
+                    
+                    map_queues_to_ids=subgraph_values.get('map_queues_to_ids')
+                    
+                    
+
+
         else:
             response_type = "complete"
 
@@ -108,6 +175,7 @@ async def stream_graph_updates(
             "action": action,
             "thread_id": thread_id,
             "next_node": next_node,
+            "map_queues_to_ids": map_queues_to_ids
         }
         yield f"data: {json.dumps(completion_data)}\n\n"
 
@@ -171,6 +239,17 @@ async def chat_stream(user: ChatRequest):
             },
         )
         
+    if not user.next_node:
+        logger.info("inside next node Null")
+        return StreamingResponse(
+            stream_graph_updates(user_query=user.user_query, thread_id=user.thread_id),
+            media_type="text/event-stream",
+            headers={
+                "Cache-Control": "no-cache",
+                "Connection": "keep-alive",
+                "X-Accel-Buffering": "no",  # Disable nginx buffering
+            },
+        )
         
 
 

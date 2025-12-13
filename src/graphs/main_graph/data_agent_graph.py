@@ -209,7 +209,7 @@ def routing_processing_search_attributes(state: OverallState) -> str:
 
 # ============= Graph Builder =============
 
-def create_data_agent_graph(llm=None, checkpointer=None):
+def create_data_agent_graph(llm=None, checkpointer=None,studio=False):
     """Factory function to create the main data agent graph
 
     Args:
@@ -227,7 +227,7 @@ def create_data_agent_graph(llm=None, checkpointer=None):
             api_key=settings.openai_api_key
         )
 
-    if checkpointer is None:
+    if checkpointer is None and not studio:
         checkpointer = MemorySaver()
 
     # Create wrapper functions that include llm
@@ -286,9 +286,14 @@ def create_data_agent_graph(llm=None, checkpointer=None):
     graph_builder.add_edge("processing_document_model_attribute", "router_processing_search_attributes")
 
     # Compile
-    graph = graph_builder.compile(
+    if checkpointer:
+        graph = graph_builder.compile(
         interrupt_before=["user_input_clarity"],
         checkpointer=checkpointer
     )
-
+    else:
+        graph = graph_builder.compile(
+        interrupt_before=["user_input_clarity"]        
+    )
+        
     return graph
